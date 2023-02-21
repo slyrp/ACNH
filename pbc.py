@@ -5,61 +5,73 @@ import zstandard
 from PIL import Image
 from colorama import Fore, Style, init
 import random
-
 # storing random stuff for when it runs
-init()
-cd = os.getcwd()
-da = ""
-emu = [
-    "Uh-oh! ",
-    "Oops! ",
-    "Whoops! ",
-    "Something went wrong! ",
-    "There's been an error. ",
-    "Something happened. ",
-    "An error has occured! ",
-    "Do you see that? Oh! "
-]
-em = random.choice(emu)
-gmu = [
-    "Woohoo! ",
-    "Amazing. ",
-    "Good news! ",
-    "Great. ",
-    "Hooray! ",
-    "Success. "
-]
-gm = random.choice(gmu)
-
+try:
+    init()
+except Exception as e:
+    input("There was an error while initializing command prompt colors. Error: " + str(e))
+try:
+    cd = os.getcwd()
+    da = ""
+except Exception as e:
+    input("There was an error while getting the current directory. Error: " + str(e))
+try:
+    emu = [
+        "Uh-oh! ",
+        "Oops! ",
+        "Whoops! ",
+        "Something went wrong! ",
+        "There's been an error. ",
+        "Something happened. ",
+        "An error has occured! ",
+        "Do you see that? Oh! "
+    ]
+    em = random.choice(emu)
+    gmu = [
+        "Woohoo! ",
+        "Amazing. ",
+        "Good news! ",
+        "Great. ",
+        "Hooray! ",
+        "Success. "
+    ]
+    gm = random.choice(gmu)
+except Exception as e:
+    input("Error while initializing good/bad dictionary. Error: " + str(e))
 # telling the user stuff, happens on every run
-print("Note: any .pbc or .zs files should be stored in *folder*/pbc for it to work!")
-if not os.path.exists(cd + "/pbc"):
-    cf = input(Fore.RED + em + "Looks like the '*folder*/pbc' directory does not exist. Would you like to create it? (y/n): " + Style.RESET_ALL)
-    if cf == "y":
-        os.mkdir("pbc")
-        print(Fore.GREEN + gm + "Directory created successfully." + Style.RESET_ALL)
+print("Note: any .pbc or .zs files should be stored in cd/pbc for it to work!")
+try:
+    if not os.path.exists(cd + "/pbc"):
+        cf = input(Fore.RED + em + 'Looks like the "cd/pbc" directory does not exist. Would you like to create it? (y/n): ' + Style.RESET_ALL)
+        if cf == "y":
+            os.mkdir("pbc")
+            print(Fore.GREEN + gm + "Directory created successfully." + Style.RESET_ALL)
+        else:
+            input(Fore.RED + em + "Directory not created."+ Style.RESET_ALL)
+            exit()
     else:
-        print(Fore.RED + em + "Directory not created."+ Style.RESET_ALL )
-else:
-    print(Fore.GREEN + gm + "'/pbc' directory already exists." + Style.RESET_ALL)
-
+        print(Fore.GREEN + gm + '"/pbc" directory already exists.' + Style.RESET_ALL)
+except Exception as e:
+    input('Error while checking for "cd/pbc" directory. Error: ' + str(e))
 #starts off by asking for file name
 name = input("Please enter file name (.zs/.pbc): ")
-
 #creating image takes like 80% of the code so i made it its own function
-def createimage(blob, w, h):
+def createimage(name, blob, w, h, da):
     ci = input("Would you like to create an image? (y/n): ")
     if ci == "y":
         try:
             if not os.path.exists(cd + "/imgs"):
-                cf = input(Fore.RED + em + "Looks like the '*folder*/imgs' directory does not exist. Would you like to create it? (y/n): " + Style.RESET_ALL)
+                cf = input(Fore.RED + em + "Looks like the 'cd/imgs' directory does not exist. Would you like to create it? (y/n): " + Style.RESET_ALL)
                 if cf == "y":
                     os.mkdir("imgs")
                     print(Fore.GREEN + gm + "Directory created successfully" + Style.RESET_ALL)
                 else:
                     print(Fore.RED + em + "Directory not created" + Style.RESET_ALL)
             else:
-                print(Fore.GREEN + "Good, '/pbc' directory already exists" + Style.RESET_ALL)
+                print(Fore.GREEN + "Good, '/imgs' directory already exists" + Style.RESET_ALL)
+        except Exception as e:
+            input('Error while checking for "cd/imgs" directory. Error: ' + str(e))
+        try:
             sets = [set() for i in range(12)]
             img = Image.new('RGBA', (w*2, h*2))
             pix = img.load()
@@ -82,72 +94,63 @@ def createimage(blob, w, h):
             for s in sets:
                 print(s)
                 print(min(s), max(s))
-        except:
-            print(Fore.RED + em + "Your image couldn't be saved for some reason. Let's try that again." + Style.RESET_ALL)
+        except Exception as e:
+            print(Fore.RED + em + "Your image couldn't be saved. Error: " + str(e) + ". Let's try that again." + Style.RESET_ALL)
             name = input("Please enter file name (.zs/.pbc): ")
             zs(name)
         try:
             print(Fore.GREEN + 'Saving image to:', 'imgs/%s.png' % name + Style.RESET_ALL)
             print(Fore.GREEN + gm + "The file was saved successfully." + Style.RESET_ALL)
-            da = input("Would you like to decompress another .zs/.pbc? (y/n): ")
-            if da == "y":
-                name = input("Please enter file name (.zs/.pbc): ")
-                checkname(name)
-            else:
-                exit()
-        except:
-            print(Fore.RED + em + "There was a problem saving the image. Let's try that again." + Style.RESET_ALL)
+        except Exception as e:
+            print(Fore.RED + em + "There was a problem saving the image. Error: " + str(e) + "Let's try that again." + Style.RESET_ALL)
             name = input("Please enter file name (.zs/.pbc): ")
             zs(name)
-    elif ci == "n":
         da = input("Would you like to decompress another .zs/.pbc? (y/n): ")
         if da == "y":
             name = input("Please enter file name (.zs/.pbc): ")
             checkname(name)
         else:
             exit()
-
-
-
-
-
-
-
-
-
-
-
+    elif ci == "n":
+        try:
+            name = input("Would you like to decompress another .zs/.pbc? (y/n): ")
+            if da == "y":
+                name = input("Please enter file name (.zs/.pbc): ")
+            checkname(name)
+        except Exception as e:
+            print("Error while initializing code to decompress another file. Error: " + e)
+    else:
+        exit()
 # for zs files
 def zs(name):
     try:
         blob = open('pbc/' + name, 'rb').read()
     except:
-        print(Fore.RED + em + "That file doesn't exist. Let's try that again." + Style.RESET_ALL)
+        print(Fore.RED + em + "There was a problem opening that file, maybe the file doesn't exist? Let's try that again." + Style.RESET_ALL)
         name = input("Please enter file name (.zs/.pbc): ")
         zs(name)
     try:
         blob = zstandard.ZstdDecompressor().decompress(blob)
         arc = sarc.SARC(blob)
-
         for name in arc.list_files():
             blob = arc.get_file_data(name)
             assert(blob[0:4] == b'pbc\0')
-            w,h,offset_x,offset_y = struct.unpack_from('<iiii', blob, 4)
+            w, h, offset_x, offset_y = struct.unpack_from('<iiii', blob, 4)
             data = bytearray(w * h * 4)
-            print("Raw decompiled data:")
-            print(data)
-            print("                Width Height Offset X Offset Y")
-            print(name, w, "   ", h, "    ", offset_x, "     ", offset_y)
-    except:
-        print(Fore.RED + em + "Looks like your .zs file could not be decompressed correctly. Let's try that again." + Style.RESET_ALL)
+            print("Raw decompressed data: " + str(data))
+            print(name + ": ")
+            print("Width: " + str(w))
+            print("Height: " + str(h))
+            print("Offset X: " + str(offset_x))
+            print("Offset Y: " + str(offset_y))
+    except Exception as e:
+        print(Fore.RED + em + "Looks like your .zs file could not be decompressed correctly. Error: " + str(e) + " Let's try that again." + Style.RESET_ALL)
         name = input("Please enter file name (.zs/.pbc): ")
         zs(name)
-    createimage(blob, w, h)
-
-
-
-
-
+    try:
+        createimage(name, blob, w, h, da)
+    except Exception as e:
+        print('Error while initiating "createimage(). Error: ' + str(e))
 # for pbc files
 def pbc(name):
     try:
@@ -155,22 +158,22 @@ def pbc(name):
     except:
         print(Fore.RED + em + "That file doesn't exist. Let's try that again." + Style.RESET_ALL)
         name = input("Please enter file name (.zs/.pbc): ")
-        zs(name)
+        pbc(name)
     try:
         assert(blob[0:4] == b'pbc\0')
-        w,h,offset_x,offset_y = struct.unpack_from('<iiii', blob, 4)
+        w, h, offset_x, offset_y = struct.unpack_from('<iiii', blob, 4)
         data = bytearray(w * h * 4)
-        print("Raw decompressed data:")
-        print(data)
-        print("                Width Height Offset X Offset Y")
-        print(name, w, "   ", h, "    ", offset_x, "     ", offset_y)
-    except:
-        print(Fore.RED + em + "Looks like your .zs file could not be decompressed correctly. Let's try that again." + Style.RESET_ALL)
+        print("Raw decompressed data: " + str(data))
+        print(name + ": ")
+        print("Width: " + str(w))
+        print("Height: " + str(h))
+        print("Offset X: " + str(offset_x))
+        print("Offset Y: " + str(offset_y))
+    except Exception as e:
+        print(Fore.RED + em + "Looks like your .zs file could not be decompressed correctly. Error: " + str(e) + "Let's try that again." + Style.RESET_ALL)
         name = input("Please enter file name (.zs/.pbc): ")
-        zs(name)
-    createimage(blob, w, h)
-
-
+        pbc(name)
+    createimage(name, blob, w, h, da)
 # checking if file ends with zs or pbc
 def checkname(name):
     if name.endswith(".zs"):
@@ -181,6 +184,5 @@ def checkname(name):
         print(Fore.RED + em + "That's not a valid file. Let's try again." + Style.RESET_ALL)
         name = input("Please enter file name (.zs/.pbc): ")
         checkname(name)
-
 # runs everything, hooray
 checkname(name)
