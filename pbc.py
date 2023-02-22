@@ -5,6 +5,7 @@ import zstandard
 from PIL import Image
 from colorama import Fore, Style, init
 import random
+
 # storing random stuff for when it runs
 try:
     init()
@@ -38,6 +39,8 @@ try:
     gm = random.choice(gmu)
 except Exception as e:
     input("Error while initializing good/bad dictionary. Error: " + str(e))
+
+
 # telling the user stuff, happens on every run
 print("Note: any .pbc or .zs files should be stored in cd/pbc for it to work!")
 try:
@@ -53,6 +56,8 @@ try:
         print(Fore.GREEN + gm + '"/pbc" directory already exists.' + Style.RESET_ALL)
 except Exception as e:
     input('Error while checking for "cd/pbc" directory. Error: ' + str(e))
+
+
 #starts off by asking for file name
 name = input("Please enter file name (.zs/.pbc): ")
 #creating image takes like 80% of the code so i made it its own function
@@ -121,6 +126,9 @@ def createimage(name, blob, w, h, da):
             print("Error while initializing code to decompress another file. Error: " + e)
     else:
         exit()
+
+
+
 # for zs files
 def zs(name):
     try:
@@ -137,6 +145,15 @@ def zs(name):
             assert(blob[0:4] == b'pbc\0')
             w, h, offset_x, offset_y = struct.unpack_from('<iiii', blob, 4)
             data = bytearray(w * h * 4)
+            offset = 0x14
+            for y in range(h):
+                for x in range(w):
+                    a, b, c, d = blob[offset+0x30:offset+0x34]
+                    data[(x*2)   + ((y*2)  *(w*2))] = a
+                    data[(x*2)   + ((y*2+1)*(w*2))] = b
+                    data[(x*2+1) + ((y*2+1)*(w*2))] = c
+                    data[(x*2+1) + ((y*2)  *(w*2))] = d
+                    offset += 0x34
             print("Raw decompressed data: " + str(data))
             print(name + ": ")
             print("Width: " + str(w))
@@ -151,6 +168,9 @@ def zs(name):
         createimage(name, blob, w, h, da)
     except Exception as e:
         print('Error while initiating "createimage(). Error: ' + str(e))
+
+
+
 # for pbc files
 def pbc(name):
     try:
@@ -163,6 +183,15 @@ def pbc(name):
         assert(blob[0:4] == b'pbc\0')
         w, h, offset_x, offset_y = struct.unpack_from('<iiii', blob, 4)
         data = bytearray(w * h * 4)
+        offset = 0x14
+        for y in range(h):
+            for x in range(w):
+                a, b, c, d = blob[offset+0x30:offset+0x34]
+                data[(x*2)   + ((y*2)  *(w*2))] = a
+                data[(x*2)   + ((y*2+1)*(w*2))] = b
+                data[(x*2+1) + ((y*2+1)*(w*2))] = c
+                data[(x*2+1) + ((y*2)  *(w*2))] = d
+                offset += 0x34
         print("Raw decompressed data: " + str(data))
         print(name + ": ")
         print("Width: " + str(w))
@@ -174,6 +203,7 @@ def pbc(name):
         name = input("Please enter file name (.zs/.pbc): ")
         pbc(name)
     createimage(name, blob, w, h, da)
+
 # checking if file ends with zs or pbc
 def checkname(name):
     if name.endswith(".zs"):
@@ -184,5 +214,6 @@ def checkname(name):
         print(Fore.RED + em + "That's not a valid file. Let's try again." + Style.RESET_ALL)
         name = input("Please enter file name (.zs/.pbc): ")
         checkname(name)
+
 # runs everything, hooray
 checkname(name)
