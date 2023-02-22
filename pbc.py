@@ -10,12 +10,12 @@ import random
 try:
     init()
 except Exception as e:
-    input("There was an error while initializing command prompt colors. Error: " + str(e))
+    input(Fore.RED + "There was an error while initializing command prompt colors. Error: " + str(e) + Style.RESET_ALL)
 try:
     cd = os.getcwd()
     da = ""
 except Exception as e:
-    input("There was an error while getting the current directory. Error: " + str(e))
+    input(Fore.RED + "There was an error while getting the current directory. Error: " + str(e) + Style.RESET_ALL)
 try:
     emu = [
         "Uh-oh! ",
@@ -38,11 +38,12 @@ try:
     ]
     gm = random.choice(gmu)
 except Exception as e:
-    input("Error while initializing good/bad dictionary. Error: " + str(e))
+    input(Fore.RED + "Error while initializing good/bad dictionary. Error: " + str(e) + Style.RESET_ALL)
 
 
 # telling the user stuff, happens on every run
 print("Note: any .pbc or .zs files should be stored in cd/pbc for it to work!")
+print("Note: for images, light grey is unwalkable, dark grey is walkable.")
 try:
     if not os.path.exists(cd + "/pbc"):
         cf = input(Fore.RED + em + 'Looks like the "cd/pbc" directory does not exist. Would you like to create it? (y/n): ' + Style.RESET_ALL)
@@ -50,12 +51,12 @@ try:
             os.mkdir("pbc")
             print(Fore.GREEN + gm + "Directory created successfully." + Style.RESET_ALL)
         else:
-            input(Fore.RED + em + "Directory not created."+ Style.RESET_ALL)
+            input(Fore.RED + em + "Directory not created." + Style.RESET_ALL)
             exit()
     else:
         print(Fore.GREEN + gm + '"/pbc" directory already exists.' + Style.RESET_ALL)
 except Exception as e:
-    input('Error while checking for "cd/pbc" directory. Error: ' + str(e))
+    input(Fore.RED + 'Error while checking for "cd/pbc" directory. Error: ' + str(e) + Style.RESET_ALL)
 
 
 #starts off by asking for file name
@@ -123,7 +124,7 @@ def createimage(name, blob, w, h, da):
                 name = input("Please enter file name (.zs/.pbc): ")
             checkname(name)
         except Exception as e:
-            print("Error while initializing code to decompress another file. Error: " + e)
+            print(Fore.RED + "Error while initializing code to decompress another file. Error: " + e)
     else:
         exit()
 
@@ -167,7 +168,7 @@ def zs(name):
     try:
         createimage(name, blob, w, h, da)
     except Exception as e:
-        print('Error while initiating "createimage(). Error: ' + str(e))
+        print(Fore.RED + 'Error while initiating "createimage(). Error: ' + str(e))
 
 
 
