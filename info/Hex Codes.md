@@ -1,6 +1,16 @@
 # Info on Hex Codes
 
 In .pbc files, hex codes such as 16 are present. [pbc.py](https://github.com/slyrp/ACNH/blob/main/pbc.py) turns these into images with hex codes that use the 16 and turn it into #161616. These are just hex codes I've gathered through exploring.
+<br>
+(If you're wondering what code does this it's:
+
+
+```
+pix[x*2,y*2] = (a,a,a,255)
+pix[x*2,y*2+1] = (b,b,b,255)
+pix[x*2+1,y*2+1] = (c,c,c,255)
+pix[x*2+1,y*2] = (d,d,d,255)
+```
 
 (?) = Not sure or just guessing
 <br>
