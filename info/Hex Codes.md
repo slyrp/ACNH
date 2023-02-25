@@ -2,7 +2,7 @@
 
 In .pbc files, hex codes such as 16 are present. [pbc.py](https://github.com/slyrp/ACNH/blob/main/pbc.py) turns these into images with hex codes that use the 16 and turn it into #161616. These are just hex codes I've gathered through exploring.
 <br>
-(If you're wondering what code does this it's:
+If you're wondering what code does this it's:
 
 
 ```
