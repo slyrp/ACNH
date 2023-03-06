@@ -207,14 +207,6 @@ def zs(name):
             w, h, offset_x, offset_y = struct.unpack_from('<iiii', blob, 4)
             data = bytearray(w * h * 4)
             offset = 0x14
-            for y in range(h):
-                for x in range(w):
-                    a, b, c, d = blob[offset+0x30:offset+0x34]
-                    data[(x*2)   + ((y*2)  *(w*2))] = a
-                    data[(x*2)   + ((y*2+1)*(w*2))] = b
-                    data[(x*2+1) + ((y*2+1)*(w*2))] = c
-                    data[(x*2+1) + ((y*2)  *(w*2))] = d
-                    offset += 0x34
             print("Raw decompressed data: " + str(data))
             print(name + ": ")
             print("Width: " + str(w))
@@ -250,14 +242,6 @@ def pbc(name):
         w, h, offset_x, offset_y = struct.unpack_from('<iiii', blob, 4)
         data = bytearray(w * h * 4)
         offset = 0x14
-        for y in range(h):
-            for x in range(w):
-                a, b, c, d = blob[offset+0x30:offset+0x34]
-                data[(x*2)   + ((y*2)  *(w*2))] = a
-                data[(x*2)   + ((y*2+1)*(w*2))] = b
-                data[(x*2+1) + ((y*2+1)*(w*2))] = c
-                data[(x*2+1) + ((y*2)  *(w*2))] = d
-                offset += 0x34
         print("Raw decompressed data: " + str(data))
         print(name + ": ")
         print("Width: " + str(w))
